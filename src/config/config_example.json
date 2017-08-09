@@ -1,0 +1,14 @@
+{
+    "rescueTime": {
+        "username": "username",
+        "password": "password"
+    },
+    "google": {
+        "username": "username",
+        "password": "password"
+    },
+    "analytics": {
+        "url": "https://analytics.google.com/analytics/web/#report/visitors-overview/some_long_string"
+    },
+    "outputDir": "results/"
+}

@@ -57,3 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
+# Custom
+src/config/config.json
+results/**
