@@ -59,4 +59,4 @@ typings/
 
 # Custom
 src/config/config.json
-results/**
+results/*
