@@ -43,7 +43,7 @@ module.exports = async function scrapeAnalytics(browser) {
     await mainTab.wait(1000);
 
     console.log("Saving Screenshot ...");
-    await mainTab.saveScreenshot(`${config.outputDir}analytics`, {
+    await mainTab.saveScreenshot(`${config.outputDir}website-traffic`, {
       clip
     });
   } catch (err) {

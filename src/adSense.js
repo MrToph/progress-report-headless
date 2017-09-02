@@ -23,11 +23,12 @@ module.exports = async function scrapeAdSense(browser) {
     // Wait some time! (2s)
     await mainTab.wait(2000);
     await mainTab.goTo(url);
+    console.log('Waiting for graph to load ...')
     await mainTab.waitForSelectorToLoad(".gwt-viz-container");
 
     console.log("Saving Screenshot ...");
     await mainTab.wait(2000);
-    await mainTab.saveScreenshot(`${config.outputDir}adsense`, {
+    await mainTab.saveScreenshot(`${config.outputDir}admob-income`, {
       selector: ".GKBRQK-B-j"
     });
   } catch (err) {
