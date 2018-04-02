@@ -25,6 +25,7 @@ module.exports = async function scrapeAnalytics(browser) {
     await mainTab.wait(2000);
     await mainTab.goTo(url);
     await mainTab.waitForSelectorToLoad("#ID-overview-graph");
+    await mainTab.wait(1000);
 
     console.log("Getting Image Viewport ...");
     const graphClip = await mainTab.getSelectorViewport("#ID-overview-graph");

@@ -11,6 +11,10 @@ const browser = new HeadlessChrome({
   deviceMetrics: {
     width: 1920,
     height: 1080
+  },
+  browser: {
+    loadPageTimeout: 60 * 60 * 1000,
+    loadSelectorTimeout: 60000
   }
 });
 

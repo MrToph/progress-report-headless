@@ -4,13 +4,17 @@ const config = require("./config/config.json");
 
 module.exports = async function scrapeRescueTime(browser) {
   try {
-    console.log("=== Scraping RescueTime ===");
     const date = moment().subtract(1, "month").format("YYYY-MM");
     const url = `https://www.rescuetime.com/browse/goals/1155502/by/day/for/the/month/of/${date}-1`;
     const mainTab = await browser.newTab({ privateTab: false });
 
+    console.log("=== Scraping RescueTime ===");
     // Navigate to a URL
-    await mainTab.goTo("https://www.rescuetime.com/login");
+    try {
+      await mainTab.goTo("https://www.rescuetime.com/login");
+    } catch (error) {
+      console.log(`Timeout. ${JSON.stringify(error)} Still continuing ...`);
+    }
 
     console.log("Logging in ...");
     await mainTab.fill("#email", config.rescueTime.username);
