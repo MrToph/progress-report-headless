@@ -1,36 +1,42 @@
 const fs = require("fs");
 const moment = require("moment");
 const config = require("./config/config.json");
-const { needsGoogleLogin, googleLogin } = require("./common");
+const { needsGoogleLogin, googleLogin, screenshotDOMElement } = require("./common");
 
 module.exports = async function scrapeAdSense(browser) {
   try {
     console.log("=== Scraping AdSense ===");
     const date = moment().subtract(1, "month").format("YYYY-MM");
-    const url = `https://apps.admob.com/v2/reports/network?d=1&dr=7__&cc=EUR&so=0`; // dr=7__ Last Month
-    const mainTab = await browser.newTab({ privateTab: false });
+    const url = `https://apps.admob.com/v2/reports/LTMxNjEwNjU0MzI4MDU5NzQwMTQ/view`;
+    const page = await browser.newPage();
+    page.setViewport({
+      width: 1920,
+      height: 1080,
+    })
 
     // Navigate to a URL
-    await mainTab.goTo(url);
+    await page.goto(url, {waitUntil: 'networkidle0'});
 
-    if (await needsGoogleLogin(mainTab)) {
+    if (await needsGoogleLogin(page)) {
       console.log("Logging in ...");
-      await googleLogin(mainTab);
+      await googleLogin(page);
+      await page.waitFor(2000);
+      await page.goto(url, {waitUntil: 'networkidle0'});
     } else {
       console.log("Already logged in ...");
     }
 
-    // Wait some time! (2s)
-    await mainTab.wait(2000);
-    await mainTab.goTo(url);
     console.log('Waiting for graph to load ...')
-    await mainTab.waitForSelectorToLoad(".gwt-viz-container");
+    await page.waitForSelector(".report-content");
+    // wait for animation to finish
+    await page.waitFor(2000);
 
     console.log("Saving Screenshot ...");
-    await mainTab.wait(2000);
-    await mainTab.saveScreenshot(`${config.outputDir}admob-income`, {
-      selector: ".GKBRQK-B-j"
-    });
+    await screenshotDOMElement(page, {
+      path: `${config.outputDir}admob-income.png`,
+      selector: ".report-content",
+      padding: `0 -50 0 -50`
+    })
   } catch (err) {
     console.log("ERROR!", err);
   }

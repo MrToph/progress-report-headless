@@ -1,53 +1,52 @@
 const fs = require("fs");
 const moment = require("moment");
 const config = require("./config/config.json");
+const { screenshotDOMElement } = require("./common")
 
 module.exports = async function scrapeRescueTime(browser) {
   try {
     const date = moment().subtract(1, "month").format("YYYY-MM");
     const url = `https://www.rescuetime.com/browse/goals/1155502/by/day/for/the/month/of/${date}-1`;
-    const mainTab = await browser.newTab({ privateTab: false });
+    const page = await browser.newPage();
+    page.setViewport({
+      width: 1920,
+      height: 1080,
+    })
 
     console.log("=== Scraping RescueTime ===");
     // Navigate to a URL
     try {
-      await mainTab.goTo("https://www.rescuetime.com/login");
+      await page.goto("https://www.rescuetime.com/login", {waitUntil: 'networkidle0'});
     } catch (error) {
-      console.log(`Timeout. ${JSON.stringify(error)} Still continuing ...`);
+      console.log(`Timeout. ${error.message} Still continuing ...`);
     }
 
     console.log("Logging in ...");
-    await mainTab.fill("#email", config.rescueTime.username);
-    await mainTab.fill("#password", config.rescueTime.password);
-    await mainTab.click("button[type=submit]");
+    await page.type("#email", config.rescueTime.username);
+    await page.type("#password", config.rescueTime.password);
+    await page.click("button[type=submit]");
 
-    // Wait some time! (2s)
-    await mainTab.wait(2000);
-    await mainTab.goTo(url);
-
-    console.log("Getting Image Viewport ...");
-    const clip = await mainTab.getSelectorViewport("#interval_chart");
-    clip.width += 10;
-    clip.height -= 50;
-    // wait until the svg animation finishes
-    await mainTab.wait(1000);
+    await page.waitFor(2000);
+    await page.goto(url, {waitUntil: 'networkidle2'});
+    await page.waitFor(1000);
 
     console.log("Saving Screenshot ...");
-    await mainTab.saveScreenshot(`${config.outputDir}rescueTime`, {
-      clip
-    });
+    await screenshotDOMElement(page, {
+      path: `${config.outputDir}rescueTime.png`,
+      selector: "#interval_chart",
+      padding: '-10 20 -45 5',
+    })
 
     console.log("Getting Productive Hours ...");
-    const productiveHoursThisMonth = (await mainTab.evaluate(() => {
+    const productiveHoursThisMonth = (await page.evaluate(() => {
       const selectorHtml = document.querySelector(
         "#browse-taxon-duration > h2"
       );
       return selectorHtml.innerHTML;
-    })).result.value;
+    }))
 
     console.log("Writing Productive Hours ...");
-    fs.appendFileSync(
-      `${config.outputDir}results.txt`,
+    fs.writeFileSync(`${config.outputDir}results.txt`,
       `Productive Hours this month: ${productiveHoursThisMonth}\n`
     );
   } catch (err) {
