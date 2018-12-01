@@ -24,7 +24,7 @@ async function scrapeSites() {
     mkdirSync(config.outputDir);
     await scrapeRescueTime(browser);
     // await scrapeAdSense(browser);
-    // await scrapeAnalytics(browser);
+    await scrapeAnalytics(browser);
   } catch (err) {
     console.log("ERROR!", err);
   } finally {

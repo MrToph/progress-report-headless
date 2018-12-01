@@ -9,6 +9,7 @@ module.exports = async function scrapeAdSense(browser) {
     const date = moment().subtract(1, "month").format("YYYY-MM");
     const url = `https://apps.admob.com/v2/reports/LTMxNjEwNjU0MzI4MDU5NzQwMTQ/view`;
     const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(180 * 1E3)
     page.setViewport({
       width: 1920,
       height: 1080,

@@ -32,7 +32,7 @@ module.exports = async function scrapeRescueTime(browser) {
 
     console.log("Saving Screenshot ...");
     await screenshotDOMElement(page, {
-      path: `${config.outputDir}rescueTime.png`,
+      path: `${config.outputDir}rescue-time.png`,
       selector: "#interval_chart",
       padding: '-10 20 -45 5',
     })
