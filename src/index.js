@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const fs = require("fs");
-const scrapeRescueTime = require("./rescueTime");
+const scrapeTimelog = require("./clockify");
 const scrapeAdSense = require("./adSense");
 const scrapeAnalytics = require("./analytics");
 
@@ -22,8 +22,8 @@ async function scrapeSites() {
   try {
     // clear file
     mkdirSync(config.outputDir);
-    await scrapeRescueTime(browser);
     // await scrapeAdSense(browser);
+    // await scrapeTimelog(browser);
     await scrapeAnalytics(browser);
   } catch (err) {
     console.log("ERROR!", err);

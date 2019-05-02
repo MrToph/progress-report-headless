@@ -9,6 +9,7 @@ module.exports = async function scrapeAnalytics(browser) {
     const dateYearMonth = moment().subtract(1, "month").format("YYYYMM");
     const lastDayOfLastMonth = moment().subtract(1, "month").daysInMonth();
     const url = `${config.analytics.url}/%3F_u.date00%3D${dateYearMonth}01%26_u.date01%3D${dateYearMonth}${lastDayOfLastMonth}/`;
+    console.log(url);
     const page = await browser.newPage();
     page.setViewport({
       width: 1920,
