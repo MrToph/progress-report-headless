@@ -11,6 +11,7 @@ module.exports = async function scrapeAnalytics(browser) {
     const url = `${config.analytics.url}/%3F_u.date00%3D${dateYearMonth}01%26_u.date01%3D${dateYearMonth}${lastDayOfLastMonth}/`;
     console.log(url);
     const page = await browser.newPage();
+    page.setDefaultNavigationTimeout(180 * 1E3)
     page.setViewport({
       width: 1920,
       height: 1080,

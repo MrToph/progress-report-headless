@@ -12,6 +12,12 @@ const googleLogin = async page => {
   await page.click("#passwordNext");
 };
 
+const waitForUrl = async (page, regex) => {
+  while(!regex.test(page.url())) {
+    await page.waitFor(200)
+  }
+};
+
 async function screenshotDOMElement(page, opts = {}) {
   const padding = 'padding' in opts ? opts.padding : '0 0 0 0';
   const path = 'path' in opts ? opts.path : null;
@@ -59,5 +65,6 @@ async function screenshotDOMElement(page, opts = {}) {
 module.exports = {
   needsGoogleLogin,
   googleLogin,
-  screenshotDOMElement
+  screenshotDOMElement,
+  waitForUrl,
 };
