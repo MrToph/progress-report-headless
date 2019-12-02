@@ -27,7 +27,7 @@ module.exports = async function scrapeRescueTime(browser) {
     console.log("=== Logging in ===");
     // await page.type("#email", config.rescueTime.username);
     // await page.type("#password", config.rescueTime.password);
-    let selector = `button.access__panel__content__buttons--google`
+    let selector = `.cl-btn.cl-btn-outline-light` // google button
     await page.waitForSelector(selector);
     await page.click(selector);
 
@@ -84,6 +84,7 @@ module.exports = async function scrapeRescueTime(browser) {
     selector = `button[class^="projects-filter--button"]`
     await page.waitForSelector(selector);
     await page.click(selector);
+    await page.waitFor(10000)
     
     console.log("Saving Screenshot ...");
     await page.waitFor(1000);
